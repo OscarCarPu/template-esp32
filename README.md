@@ -48,6 +48,20 @@ For more control, use the cargo aliases defined in `.cargo/config.toml`:
 
 Example: `cargo +esp run-supermini`
 
+## WiFi
+
+The template connects to a WiFi network on boot using embassy-net (DHCP, DNS, TCP). Set your credentials in `.env`:
+
+```
+WIFI_SSID=your_ssid
+WIFI_PASSWORD=your_password
+```
+
+On startup the firmware will:
+1. Connect to the configured WiFi network (auto-reconnects on disconnect)
+2. Obtain an IP address via DHCP
+3. Ping google.com every 5 seconds via TCP connect as a connectivity check
+
 ## Environment variables
 
 The build script (`build.rs`) loads variables from `.env` at compile time using `env!()`. This lets you embed configuration (Wi-Fi credentials, API keys, etc.) into the firmware without hardcoding them in source.
@@ -55,10 +69,13 @@ The build script (`build.rs`) loads variables from `.env` at compile time using 
 1. Copy or edit `.env` in the project root:
    ```
    EXAMPLE_ENV_VAR=example
+   WIFI_SSID=your_ssid
+   WIFI_PASSWORD=your_password
    ```
 2. Reference them in Rust:
    ```rust
    const EXAMPLE_ENV_VAR: &str = env!("EXAMPLE_ENV_VAR");
+   const WIFI_SSID: &str = env!("WIFI_SSID");
    ```
 
 The `.env` file is tracked by cargo — changes to it trigger a rebuild automatically.
