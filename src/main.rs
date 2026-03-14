@@ -24,7 +24,6 @@ macro_rules! mk_static {
     }};
 }
 
-const EXAMPLE_ENV_VAR: &str = env!("EXAMPLE_ENV_VAR");
 const WIFI_SSID: &str = env!("WIFI_SSID");
 const WIFI_PASSWORD: &str = env!("WIFI_PASSWORD");
 

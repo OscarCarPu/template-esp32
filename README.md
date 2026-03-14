@@ -66,15 +66,13 @@ On startup the firmware will:
 
 The build script (`build.rs`) loads variables from `.env` at compile time using `env!()`. This lets you embed configuration (Wi-Fi credentials, API keys, etc.) into the firmware without hardcoding them in source.
 
-1. Copy or edit `.env` in the project root:
+1. Copy `.env.example` to `.env` and fill in your values:
    ```
-   EXAMPLE_ENV_VAR=example
    WIFI_SSID=your_ssid
    WIFI_PASSWORD=your_password
    ```
 2. Reference them in Rust:
    ```rust
-   const EXAMPLE_ENV_VAR: &str = env!("EXAMPLE_ENV_VAR");
    const WIFI_SSID: &str = env!("WIFI_SSID");
    ```
 
@@ -84,7 +82,8 @@ The `.env` file is tracked by cargo — changes to it trigger a rebuild automati
 
 ```
 .cargo/config.toml   # build targets, runners, and cargo aliases
-.env                 # compile-time environment variables (loaded by build.rs)
+.env.example         # template for .env (copy and fill in your values)
+.env                 # compile-time environment variables (loaded by build.rs, git-ignored)
 build.rs             # linker script setup, dotenv loading, friendly error messages
 Cargo.toml           # dependencies and feature flags per target
 rust-toolchain.toml  # pins the esp toolchain
