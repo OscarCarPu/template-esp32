@@ -30,10 +30,29 @@ Used to flash firmware and monitor serial output.
 ## Usage
 
 ```bash
-make build    # compile for ESP32 DevKit (Xtensa)
-make flash    # compile and flash to ESP32 DevKit, then open serial monitor
-make stop     # erase flash on /dev/ttyUSB0
+# DevKit (ESP32 / Xtensa) — serial on /dev/ttyUSB0
+make build            # compile
+make flash            # compile, flash, and open serial monitor
+make stop             # erase flash
+
+# SuperMini (ESP32-C3 / RISC-V) — serial on /dev/ttyACM0
+make build-supermini  # compile
+make flash-supermini  # compile, flash, and open serial monitor
+make stop-supermini   # erase flash
 ```
+
+## Target differences
+
+| | ESP32 DevKit (Xtensa) | ESP32-C3 SuperMini (RISC-V) |
+|---|---|---|
+| **Cargo target** | `xtensa-esp32-none-elf` | `riscv32imc-unknown-none-elf` |
+| **Feature flag** | `esp32` | `esp32c3` |
+| **Serial port** | `/dev/ttyUSB0` (USB-UART bridge) | `/dev/ttyACM0` (built-in USB CDC) |
+| **Linker** | Espressif GNU ld | `rust-lld` |
+| **RTOS init** | `esp_rtos::start(timer)` | `esp_rtos::start(timer, software_interrupt)` — RISC-V requires a `SoftwareInterrupt<0>` |
+| **Linker error hints** | `--error-handling-script` provides friendly messages | Skipped (unsupported by `rust-lld`) |
+
+The cargo aliases use `--no-default-features` to prevent both chip features from being enabled at the same time (the default feature is `esp32`).
 
 ## Cargo aliases
 
